@@ -120,7 +120,7 @@ class MultiChoiceQuestion(models.Model):
 class Paper(models.Model):
     #题号id 和题库为多对多的关系
     id = models.AutoField(primary_key=True)
-    title = models.CharField('试卷名',max_length=50,default='默认')
+    title = models.CharField('试卷名',max_length=50,default='测试')
     #title = '试卷名'
     sid=models.ManyToManyField(SingleChoiceQuestion)#多对多
     mid=models.ManyToManyField(MultiChoiceQuestion)#多对多
@@ -136,6 +136,21 @@ class Paper(models.Model):
     def __str__(self):
         return self.title
 
+
+class PaperRecord(models.Model):
+    #题号id 和题库为多对多的关系
+    id = models.AutoField(primary_key=True)
+    paper_title=models.CharField('试卷名',max_length=50,default='测试')
+    stu_id=models.CharField('学生编号',max_length=20)
+    answer_sc = models.CharField('单选记录',max_length=255,default='')  # single choice
+    answer_mc = models.CharField('多选记录',max_length=255,default='')  # multi choice
+
+    class Meta:
+        #db_table='paper'
+        verbose_name='试卷记录'
+        verbose_name_plural=verbose_name
+    def __str__(self):
+        return str(self.id)
 
 
 class Grade(models.Model):

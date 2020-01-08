@@ -18,22 +18,21 @@
 <nav class="navbar navbar-expand-sm bg-light navbar-light ">
     <ul class="navbar-nav">
         <li class="nav-item active">
-            <a class="nav-link"><h3>在线训练系统</h3></a>
+            <a class="nav-link" style="font-weight: bold;">在线训练系统</a>
         </li>
 
-{#         <li class="nav-item active">#}
-{#            <a class="nav-link" href="/toLogin/">受训人登陆</a>#}
-{##}
-{#        </li>#}
-{##}
-{#            <li class="nav-item active">#}
-{#            <a class="nav-link" href="/admin/">施训人登陆</a>#}
-{#            </li>#}
-        <li>
-            <a href="/logout/"><button data-target="#myModal" data-toggle="modal" class="btn btn-primary">退出</button></a>
-        </li>
+          <li class="nav-item">
+              <a class="nav-link" href="" data-target="#stuModal" data-toggle="modal">受训人登陆</a>
+          </li>
 
-        <li style="position: fixed;right:70px; font-size: 40px;color: #9fcdff">{{ message }}{{ teacher.name }}</li>
+          <li class="nav-item">
+              <a class="nav-link" href="" data-target="#teaModal" data-toggle="modal">组训人登陆</a>
+          </li>
+        
+
+          <li style="position: fixed;right: 70px; font-size: 18px;color: #2f21f5;top:13px;">{{ teacher.name }}{{ message }}</li>
+              <a href="/logout/">
+          <li style="position: fixed;right: 20px; font-size: 20px;color:#cc1313; font-size:18px; top:13px;">退出</li></a>
 
     </ul>
 </nav>
@@ -42,7 +41,7 @@
 
   <br>
   <!-- Nav pills -->
-  <ul class="nav nav-pills" role="tablist">
+  <!-- <ul class="nav nav-pills" role="tablist">
     <li class="nav-item">
         <a class="nav-link active" data-toggle="pill" href="#home">个人信息</a>
     </li>
@@ -53,7 +52,22 @@
         <a class="nav-link" data-toggle="pill" href="#menu2">成绩查询</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" data-toggle="pill" href="#menu3">试题导入</a>
+        <a class="nav-link" data-toggle="pill" href="#menu3">信息导入</a>
+    </li>
+  </ul> -->
+
+  <ul class="nav" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" data-toggle="pill" href="#home">个人信息</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="pill" href="#menu1">成绩统计</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="pill" href="#menu2">成绩查询</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="pill" href="#menu3">信息导入</a>
     </li>
     <!-- <li class="nav-item">
       <a class="nav-link" href="/admin/student/paper/add/">组卷</a>
@@ -64,7 +78,6 @@
   <div class="tab-content">
     <div id="home" class="container tab-pane active"><br>
       <h3>个人信息</h3>
-      <p>登陆成功后可查看我的个人信息哦.</p>
         <table class="table">
     <thead>
       <tr>
@@ -107,9 +120,10 @@
             <thead>
               <tr>
 
-                <th>姓名</th>
-                <th>考试科目</th>
-                  <th>考试时间</th>
+                  <th>姓名</th>
+                  <th>训练科目</th>
+                  <th>训练名称</th>
+                  <th>考试时长</th>
                   <th>操作</th>
               </tr>
             </thead>
@@ -121,8 +135,9 @@
 
                   <td>{{ teacher.name }}</td>
                   <td>{{ paper1.subject }}</td>
-                  <td>{{ paper1.examtime }}</td>
-                 <td><a href="/showGrade/?subject={{ paper1.subject }}">
+                  <td>{{ paper1.title }}</td>
+                  <td>{{ paper1.examperiod }}</td>
+                 <td><a href="/showGrade/?paper_title={{ paper1.title }}">
                      <button type="button" class="btn btn-primary"
                  data-toggle="collapse" data-target="#demo">查看学生成绩</button></a>
                  </td>
@@ -146,30 +161,30 @@
 
         // 指定图表的配置项和数据
         var option = {
-    legend: {},
-    tooltip: {},
-    dataset: {
-        // 提供一份数据。
-        source: [
-            ['product', '软件工程', '数据库原理'],
-            ['<60', {{ data_1.data1 }}, {{ data_2.data6 }}],
-            ['60<=成绩<70', {{ data_1.data2 }}, {{ data_2.data7 }}],
-            ['70<=成绩<80', {{ data_1.data3 }}, {{ data_2.data8 }}],
-            ['80<=成绩<90', {{ data_1.data4 }}, {{ data_2.data9 }}],
-            ['90<=成绩', {{ data_1.data5 }}, {{ data_2.data10 }}]
+                        legend: {},
+                        tooltip: {},
+                        dataset: {
+                            // 提供一份数据。
+                            source: [
+                                ['product', '{{ data_1.title }}' ],
+                                ['<60', {{ data_1.data1 }} ],
+                                ['60<=成绩<70', {{ data_1.data2 }} ],
+                                ['70<=成绩<80', {{ data_1.data3 }} ],
+                                ['80<=成绩<90', {{ data_1.data4 }} ],
+                                ['90<=成绩', {{ data_1.data5 }} ]
 
-        ]
-    },
-    // 声明一个 X 轴，类目轴（category）。默认情况下，类目轴对应到 dataset 第一列。
-    xAxis: {type: 'category'},
-    // 声明一个 Y 轴，数值轴。
-    yAxis: {},
-    // 声明多个 bar 系列，默认情况下，每个系列会自动对应到 dataset 的每一列。
-    series: [
-        {type: 'bar'},
-        {type: 'bar'}
-    ]
-};
+                            ]
+                        },
+                        // 声明一个 X 轴，类目轴（category）。默认情况下，类目轴对应到 dataset 第一列。
+                        xAxis: {type: 'category'},
+                        // 声明一个 Y 轴，数值轴。
+                        yAxis: {},
+                        // 声明多个 bar 系列，默认情况下，每个系列会自动对应到 dataset 的每一列。
+                        series: [
+                            {type: 'bar'},
+                        ]
+                    };
+
         // 使用刚指定的配置项和数据显示图表。
         myChart.setOption(option);
 
@@ -192,22 +207,13 @@
                   </div>
 
                   <div class="col-sm-2 offset-1">
-                      <label for="">性别</label>
-
-                      <div class="radio">
-{#                          使用单选框的checked属性，默认 全部 单选按钮被选中#}
-                            <label><input type="radio" name="sex" value="" checked>全部</label>
-                        </div>
-                      <div class="radio">
-                            <label><input type="radio" name="sex" value="男" >男</label>
-                        </div>
-                        <div class="radio">
-                          <label><input type="radio" name="sex" value="女">女</label>
-                        </div>
-                  </div>
-                  <div class="col-sm-2 offset-1">
-                      <label for="">科目</label>
-                      <input type="text" name="subject" placeholder="输入科目名称">
+                      <label for="">试卷名</label>
+                      <select name="paper_title" class="form-control">
+                        <option value ="all">全选</option>
+                        {% for paper_uut in paper %}
+                            <option value ="{{ paper_uut.title }}">{{ paper_uut.title }}</option>
+                        {% endfor %}
+                      </select>
                   </div>
 
                   <div class="col-sm-2 offset-2">
@@ -223,21 +229,17 @@
                 <thead>
                   <tr>
                       <th>学号</th>
-                    <th>姓名</th>
-                      <th>专业</th>
-                    <th>科目</th>
-                    <th>成绩</th>
+                      <th>试卷</th>
+                      <th>成绩</th>
                   </tr>
                 </thead>
                 <tbody>
 
-                {% for result1 in result %}
+                {% for grade_uut in grade %}
                 <tr class="table-primary">
-                    <td>{{ result1.id }}</td>
-                    <td>{{ result1.name }}</td>
-                    <td>{{ result1.major }}</td>
-                    <td>{{ result1.subject }}</td>
-                    <td>{{ result1.grade }}</td>
+                    <td>{{ grade_uut.sid }}</td>
+                    <td>{{ grade_uut.paper_title }}</td>
+                    <td>{{ grade_uut.grade }}</td>
                 </tr>
                 {% endfor %}
                 </tbody>
@@ -246,51 +248,208 @@
     </div>
 
     <div id="menu3" class="container tab-pane"><br>
-      <div class="card">
-          <div class="card-header">
-              <h5> 单选题库上传 </h5>
-          </div>
 
-          <div class="card-body">
-              <form action="/upSingleChoice/" method="post" enctype="multipart/form-data">
-                  <input type="hidden" name="tid" value="{{ teacher.id }}">
-                  <!-- <input type='text' name='textfield' id='textfield' class='txt' size="38"/> -->
-                  <!-- <input type='button' class='btn' value='浏览...' /> -->
-                  <input type="file" name="singleCholiceUpload" class="file" id="fileField" size="28"  
-                  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
-                  <!-- <input type="submit" name="submit" class="btn" value="上传" /> -->
-                  <button type="submit" class="btn btn-primary" data-toggle="collpase">上传</button>
-              </form>
-          </div>
+      <div class="container">
+          <div class="row">
+              <div class="col-sm">
+
+                    <div class="card">
+                            <div class="card-header">
+                                <h5> 单选题库上传 </h5>
+                            </div>
+
+                            <div class="card-body">
+                                <form action="/upSingleChoice/" method="post" enctype="multipart/form-data">
+                                    <input type="hidden" name="tid" value="{{ teacher.id }}">
+                                    <input type="file" name="singleCholiceUpload" class="file" id="fileField" size="28"  
+                                    accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+                                    <button type="submit" class="btn btn-primary" data-toggle="collpase">上传</button>
+                                </form>
+                            </div>
+                    </div>
+              </div>
+            
+                <div class="col-sm">
+                    <div class="alert alert-light">
+                        <strong>单选题上传说明：</strong>上传文件为.xls或.xlsx格式，格式如下：
+                        <br>
+                        <table class="table table-condensed table-striped" style="font-size: 14px;">
+                            <thead>
+                                <tr>
+                                    <td>题目</td> <td>A</td><td>B</td><td>C</td><td>D</td><td>答案</td><td>科目</td><td>类型</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1+1=</td> <td>1</td><td>2</td><td>3</td><td>4</td><td>B</td><td>管理控制</td><td>单选</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <br>
+
+            <div class="row">
+                    <div class="col-sm">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5> 多选题库上传 </h5>
+                                </div>
+
+                                <div class="card-body">
+                                    <form action="/upMultiChoice/" method="post" enctype="multipart/form-data">
+                                        <input type="hidden" name="tid" value="{{ teacher.id }}">
+                                        <input type="file" name="multiCholiceUpload" class="file" id="fileField" size="28"  
+                                        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+                                        <button type="submit" class="btn btn-primary" data-toggle="collpase">上传</button>
+                                    </form>
+                                </div>
+                            </div>
+                    </div>
+
+                    <div class="col-sm">
+                        <div class="alert alert-light">
+                            <strong>多选题上传说明：</strong>上传文件为.xls或.xlsx格式，格式如下：
+                            <br>
+                            <table class="table table-condensed table-striped" style="font-size: 14px;">
+                                <thead>
+                                    <tr>
+                                        <td>题目</td> <td>A</td><td>B</td><td>C</td><td>D</td><td>答案</td><td>科目</td><td>类型</td>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1+1<=</td> <td>1</td><td>2</td><td>3</td><td>4</td><td>B,C,D</td><td>管理控制</td><td>多选</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+            </div>
+
+          <br>
+
+          <div class="row">
+                  <div class="col-sm">
+                        <div class="card">
+                              <div class="card-header">
+                                  <h5> 人员信息上传 </h5>
+                              </div>
+
+                              <div class="card-body">
+                                  <form action="/upPersonInfo/" method="post" enctype="multipart/form-data">
+                                      <input type="hidden" name="tid" value="{{ teacher.id }}">
+                                      <input type="file" name="personInfoUpload" class="file" id="fileField" size="28"  
+                                      accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
+                                      <button type="submit" class="btn btn-primary" data-toggle="collpase">上传</button>
+                                  </form>
+                              </div>
+                        </div>
+                  </div>
+
+                  <div class="col-sm">
+                    <div class="alert alert-light">
+                        <strong>人员信息上传说明：</strong>上传文件为.xls或.xlsx格式，格式如下：
+                        <br>
+                        <table class="table table-condensed table-striped" style="font-size: 14px;">
+                            <thead>
+                                <tr>
+                                    <td>id</td> <td>姓名</td><td>性别</td><td>部门</td><td>密码</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>100001</td> <td>张三</td><td>男</td><td>总体室</td><td>111111</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
       </div>
-
-      <p></p>
-
-      <div class="card">
-          <div class="card-header">
-              <h5> 多选题库上传 </h5>
-          </div>
-
-          <div class="card-body">
-              <form action="/upMultiChoice/" method="post" enctype="multipart/form-data">
-                  <input type="hidden" name="tid" value="{{ teacher.id }}">
-                  <!-- <input type='text' name='textfield' id='textfield' class='txt' size="38"/> -->
-                  <!-- <input type='button' class='btn' value='浏览...' /> -->
-                  <input type="file" name="multiCholiceUpload" class="file" id="fileField" size="28"  
-                  accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" />
-                  <!-- <input type="submit" name="submit" class="btn" value="上传" /> -->
-                  <button type="submit" class="btn btn-primary" data-toggle="collpase">上传</button>
-              </form>
-          </div>
-      </div>
-    
 </div>
 
-  </div>
 
+{#学生登录的模态对话框#}
+<div class="modal fade" tabindex="-1" role="dialog" id="stuModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">受训人登陆</h4>
+            </div>
+            <form class="form-horizontal" action="/studentLogin/" method="post">
+            <div class="modal-body">
+
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label">受训人编号</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="id" placeholder="输入学号">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="addr" class="col-sm-3 control-label">密码</label>
+                        <div class="col-sm-9">
+                            <!--
+                            <textarea id="addr" class="form-control" rows="3"></textarea>
+                            -->
+                            <input type="password" class="form-control" name="password" placeholder="输入密码">
+                         </div>
+                    </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="submit" class="btn btn-primary">登陆</button>
+            </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
 </div>
 
+{#老师登录的模态对话框#}
+<div class="modal fade" tabindex="-1" role="dialog" id="teaModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">组训人登陆</h4>
+            </div>
+            <form class="form-horizontal" action="/officerLogin/" method="post">
+            <div class="modal-body">
 
+                    <div class="form-group">
+                        <label for="inputEmail3" class="col-sm-3 control-label">组训人编号</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" name="id" placeholder="输入工号">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="addr" class="col-sm-3 control-label">密码</label>
+                        <div class="col-sm-9">
+                            <!--
+                            <textarea id="addr" class="form-control" rows="3"></textarea>
+                            -->
+                            <input type="password" name="password" placeholder="输入密码" class="form-control">
+                         </div>
+                    </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                <button type="submit" class="btn btn-primary">登陆</button>
+            </div>
+            </form>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div>
 
 </body>
 </html>

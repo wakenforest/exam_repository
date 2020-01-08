@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Student,Officer,Paper,Subject,SingleChoiceQuestion,MultiChoiceQuestion,Grade
+from .models import Student,Officer,Paper,Subject,SingleChoiceQuestion,MultiChoiceQuestion,Grade,PaperRecord
 
 # Register your models here.
 
@@ -37,10 +37,15 @@ class MultiChoiceQuestionAdmin(admin.ModelAdmin):
 
 @admin.register(Paper)
 class PaperAdmin(admin.ModelAdmin):
-    list_display = ('tid','title','subject','examtime')
-    list_display_links = ('tid','title','subject','examtime')
+    list_display = ('tid','title','subject','examtime','examperiod')
+    list_display_links = ('tid','title','subject','examtime','examperiod')
 
 @admin.register(Grade)
 class GradeAdmin(admin.ModelAdmin):
     list_display = ('sid','paper_title','grade')
     list_display_links = ('sid','paper_title','grade')
+
+@admin.register(PaperRecord)
+class GradeAdmin(admin.ModelAdmin):
+    list_display = ('paper_title','stu_id','answer_sc','answer_mc')
+    list_display_links = ('paper_title','stu_id','answer_sc','answer_mc')

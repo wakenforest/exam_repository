@@ -32,9 +32,13 @@ urlpatterns = [
     #默认访问首页
     url(r'^$',views.index),
     url(r'^startExam/$',views.startExam),
+    url(r'^viewExam/$',views.viewExam),
     url(r'^calGrade/$',views.calGrade),
     url(r'^logout/$',views.logOut),
     url(r'^toIndex/$',views.toIndex),
     url(r'^upSingleChoice/$', views.upSingleChoice),
     url(r'^upMultiChoice/$', views.upMultiChoice),
+    url(r'^upPersonInfo/$', views.upPersonInfo),
+    url('queryStudent',views.queryStudent),
+    url('showGrade',views.showGrade),
 ]

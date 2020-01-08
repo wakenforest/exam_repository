@@ -20,32 +20,36 @@
 <nav class="navbar navbar-expand-sm bg-light navbar-light ">
     <ul class="navbar-nav">
         <li class="nav-item">
-            <a class="nav-link" href="/toIndex/"><h3>在线训练系统 首页</h3></a>
+          <div class="nav-link" style="color:black; font-weight: bold;">在线训练系统</div>
         </li>
 
-{#         <li class="nav-item active">#}
-{#            <a class="nav-link" href="/toLogin/">考生登陆</a>#}
-{##}
-{#        </li>#}
-{##}
-{#            <li class="nav-item active">#}
-{#            <a class="nav-link" href="/admin/">考官登陆</a>#}
-{#            </li>#}
-        <li>
+        <!-- <li>
+            <a class="nav-link" href="/toIndex/">首页</a>
+        </li> -->
+
+        <li class="nav-item">
+            <a class="nav-link" href="" data-target="#stuModal" data-toggle="modal">受训人登陆</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" href="" data-target="#teaModal" data-toggle="modal">组训人登陆</a>
+        </li>
+
+        <!-- <li>
             <button data-target="#stuModal" data-toggle="modal" class="btn btn-primary">考生登陆</button>
         </li>
 
         <li>
             <button data-target="#teaModal" data-toggle="modal" class="btn btn-primary">考官登陆</button>
-        </li>
+        </li> -->
 
         <li class="nav-item">
             <a class="nav-link" href="/admin">管理员</a>
         </li>
 
-
-        <li style="position: fixed;right: 70px; font-size: 40px;color: #9fcdff">{{ student.name }}{{ message }}</li>
-       <a href="/logout/"><li style="position: fixed;right: 20px; font-size: 20px;top:22px;color:#cc1313">退出</li></a>
+        <li style="position: fixed;right: 70px; font-size: 18px;color: #2f21f5;top:13px;">{{ student.name }}{{ message }}</li>
+       <a href="/logout/">
+        <li style="position: fixed;right: 20px; font-size: 20px;color:#cc1313; font-size:18px; top:13px;">退出</li></a>
 
     </ul>
 </nav>
@@ -126,10 +130,9 @@
       <tr>
           <th>学号</th>
           <th>姓名</th>
-          <th>考卷编号</th>
           <th>考试科目</th>
           <th>考卷名称</th>
-          <th>考试时间</th>
+          <th>考试时长</th>
           <th>操作</th>
       </tr>
     </thead>
@@ -140,10 +143,9 @@
      <tr class="table-info">
           <td>{{ student.id }}</td>
           <td>{{ student.name }}</td>
-          <td>{{ paper1.id }}</td>
-          <td>{{ paper1.subject }}{{ paper2.subject }}</td>
-          <td>{{ paper1.title }}{{ paper2.title }}</td>
-          <td>{{ paper1.examtime }} {{ paper2.examtime }}</td>
+          <td>{{ paper1.subject }} </td>
+          <td>{{ paper1.title }} </td>
+          <td>{{ paper1.examperiod }} min </td>
           <td>
               <a href="/startExam/?sid={{ student.id }}&subject={{ paper1.subject }}&paperid={{ paper1.id }}">
               <button class="btn btn-primary" id="toExam+{{ paper1.subject }}">开始考试</button>
@@ -164,22 +166,34 @@
         <table class="table">
         <thead>
           <tr>
+            <th>编号</th>
             <th>姓名</th>
             <th>试卷名</th>
             <th>成绩</th>
-
+            <th>查看考卷</th>
           </tr>
         </thead>
     <tbody>
 
     {% for grade1 in grade %}
         <tr class="table-primary">
-        <td>{{ student.name }}</td>
-        <td>{{ grade1.paper_title }}</td>
-        <td>{{ grade1.grade }}</td>
-
+          <td>{{ student.id }}</td>
+          <td>{{ student.name }}</td>
+          <td>{{ grade1.paper_title }}</td>
+          <td>{{ grade1.grade }}</td>
+          <td>
+            {% for paper1 in paper %}
+                {% if paper1.title == grade1.paper_title %}
+                  <a href="/viewExam/?sid={{ student.id }}&subject={{ paper1.subject }}&paper_title={{ paper1.title }}">
+                      <button class="btn btn-primary" id="toExam+{{ paper1.subject }}">查看</button>
+                  </a>
+                {% endif %}
+            {% endfor %}
+          </td>
       </tr>
     {% endfor %}
+
+    
 
 
 
@@ -199,13 +213,13 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">学生登陆</h4>
+                <h4 class="modal-title">受训人登陆</h4>
             </div>
             <form class="form-horizontal" action="/studentLogin/" method="post">
             <div class="modal-body">
 
                     <div class="form-group">
-                        <label class="col-sm-3 control-label">学生学号</label>
+                        <label class="col-sm-3 control-label">受训人编号</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" name="id" placeholder="输入学号">
                         </div>
@@ -238,13 +252,13 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
-                <h4 class="modal-title">教师登陆</h4>
+                <h4 class="modal-title">组训人登陆</h4>
             </div>
             <form class="form-horizontal" action="/officerLogin/" method="post">
             <div class="modal-body">
 
                     <div class="form-group">
-                        <label for="inputEmail3" class="col-sm-3 control-label">教师工号</label>
+                        <label for="inputEmail3" class="col-sm-3 control-label">组训人编号</label>
                         <div class="col-sm-9">
                             <input type="text" class="form-control" name="id" placeholder="输入工号">
                         </div>
