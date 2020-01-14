@@ -6,6 +6,7 @@ import operator
 import os
 from django.conf import settings
 import xlrd
+import datetime
 
 # Create your views here.
 def index(request):
@@ -49,6 +50,10 @@ def OfficerLogin(request):
 
         paper_all=models.Paper.objects.all()
         paper_last = paper_all.order_by('-id')[0]
+
+        subject = models.Subject.objects.all()
+        sc_num = models.SingleChoiceQuestion.objects.all().count()
+        mc_num = models.MultiChoiceQuestion.objects.all().count()
         
         try:
             teacher = models.Officer.objects.get(id=teaId)
@@ -69,7 +74,8 @@ def OfficerLogin(request):
 
             data_1={'data1':data1,'data2':data2,'data3':data3,'data4':data4,'data5':data5,'title':title_focus}
 
-            return render(request, 'teacher.html', {'teacher': teacher, 'paper':paper,'data_1':data_1})
+            return render(request, 'teacher.html', {'teacher': teacher, 'paper':paper,'data_1':data_1,
+                'subject':subject,'sc_num':sc_num,'mc_num':mc_num})
 
         else:
             return render(request, 'index.html', {'message': '密码不正确'})
@@ -212,8 +218,9 @@ def upSingleChoice(request):
     except:
         teacher=models.Officer.objects.get(id=teaId)
         paper=models.Paper.objects.filter(tid=teacher.id)
+        subject = models.Subject.objects.all()
         data_1 = {}
-        return render(request, 'teacher.html', {'teacher': teacher, 'paper':paper,'data_1':data_1})
+        return render(request, 'teacher.html', {'teacher': teacher, 'paper':paper,'data_1':data_1,'subject':subject})
 
     book = xlrd.open_workbook(filePath)
 
@@ -237,6 +244,7 @@ def upSingleChoice(request):
             subject_tmp = models.Subject.objects.get(title=subjectTitle)
             scQuestionList = models.SingleChoiceQuestion.objects.all()
             
+            # create subject model
             validated_data = dict()
             print(subject_tmp)
             validated_data['id'] = subject_tmp.id
@@ -256,9 +264,10 @@ def upSingleChoice(request):
 
     teacher=models.Officer.objects.get(id=teaId)
     paper=models.Paper.objects.filter(tid=teacher.id)
+    subject = models.Subject.objects.all()
     data_1 = {}
 
-    return render(request, 'teacher.html', {'teacher': teacher, 'paper':paper,'data_1':data_1})
+    return render(request, 'teacher.html', {'teacher': teacher, 'paper':paper,'data_1':data_1,'subject':subject})
 
 
 # 上传多选题
@@ -274,8 +283,9 @@ def upMultiChoice(request):
     except:
         teacher=models.Officer.objects.get(id=teaId)
         paper=models.Paper.objects.filter(tid=teacher.id)
+        subject = models.Subject.objects.all()
         data_1 = {}
-        return render(request, 'teacher.html', {'teacher': teacher, 'paper':paper,'data_1':data_1})
+        return render(request, 'teacher.html', {'teacher': teacher, 'paper':paper,'data_1':data_1,'subject':subject})
 
     book = xlrd.open_workbook(filePath)
 
@@ -305,8 +315,6 @@ def upMultiChoice(request):
             validated_data['title'] = subjectTitle
             subject_ins = models.Subject(**validated_data)
 
-            print( (subject_ins.id) )
-
             flag_ques = 0
 
             for scQuestion in scQuestionList:
@@ -321,8 +329,9 @@ def upMultiChoice(request):
     teacher=models.Officer.objects.get(id=teaId)
     paper=models.Paper.objects.filter(tid=teacher.id)
     data_1 = {}
+    subject = models.Subject.objects.all()
     
-    return render(request, 'teacher.html', {'teacher': teacher, 'paper':paper,'data_1':data_1})
+    return render(request, 'teacher.html', {'teacher': teacher, 'paper':paper,'data_1':data_1,'subject':subject})
 
 
 # 上传人员信息
@@ -337,8 +346,9 @@ def upPersonInfo(request):
     except:
         teacher=models.Officer.objects.get(id=teaId)
         paper=models.Paper.objects.filter(tid=teacher.id)
+        subject = models.Subject.objects.all()
         data_1 = {}
-        return render(request, 'teacher.html', {'teacher': teacher, 'paper':paper,'data_1':data_1})
+        return render(request, 'teacher.html', {'teacher': teacher, 'paper':paper,'data_1':data_1,'subject':subject})
 
     book = xlrd.open_workbook(filePath)
 
@@ -369,8 +379,9 @@ def upPersonInfo(request):
     teacher=models.Officer.objects.get(id=teaId)
     paper=models.Paper.objects.filter(tid=teacher.id)
     data_1 = {}
+    subject = models.Subject.objects.all()
     
-    return render(request, 'teacher.html', {'teacher': teacher, 'paper':paper,'data_1':data_1})
+    return render(request, 'teacher.html', {'teacher': teacher, 'paper':paper,'data_1':data_1,'subject':subject})
 
 
 #教师按条件查询学生
@@ -383,6 +394,7 @@ def queryStudent(request):
     tid=request.GET.get('tid')
     teacher = models.Officer.objects.get(id=tid)
     paper = models.Paper.objects.filter(tid=teacher.id)
+    subject = models.Subject.objects.all()
 
     if sid=="" and paper_title=="all":
         grade = models.Grade.objects.all()
@@ -403,9 +415,8 @@ def queryStudent(request):
     # cursor.execute(sql,val)
     # result=dictfetchall(cursor)
 
-
     # print(result)
-    return render(request,'teacher.html',{'teacher':teacher,'paper':paper,'grade':grade})
+    return render(request,'teacher.html',{'teacher':teacher,'paper':paper,'grade':grade,'subject':subject})
 
 
 #教师查看成绩
@@ -413,7 +424,7 @@ def showGrade(request):
     paper_title=request.GET.get('paper_title')
     grade=models.Grade.objects.filter(paper_title=paper_title)
     paper=models.Paper.objects.filter(title=paper_title)
-    
+    subject = models.Subject.objects.all()
 
     data1=models.Grade.objects.filter(paper_title=paper_title,grade__lt=60).count()
     data2=models.Grade.objects.filter(paper_title=paper_title,grade__gte=60,grade__lt=70).count()
@@ -423,4 +434,57 @@ def showGrade(request):
 
     data_1 = {'title':paper_title, 'data1': data1, 'data2': data2, 'data3': data3, 'data4': data4, 'data5': data5}
 
-    return render(request,'showGrade.html',{'grade':grade,'data_1':data_1,'paper':paper,'paper_title':paper_title})
+    return render(request,'showGrade.html',{'grade':grade,'data_1':data_1,'paper':paper,'paper_title':paper_title
+    ,'subject':subject})
+
+
+#自动组卷
+def genPaper(request):
+    #获取教师查询的条件值
+
+    if request.method=='POST':
+        sid=request.POST.get('id')
+        paper_title=request.POST.get('paper_title')
+        singleChoiceNum = request.POST.get('singleChoiceNum')
+        multiChoiceNum = request.POST.get('multiChoiceNum')
+        subject_title = request.POST.get('subject_title')
+        exam_period = request.POST.get('exam_period')
+        tid=request.POST.get('tid')
+
+        # create teacher_ins for foreign key
+        teacher = models.Officer.objects.get(id=tid)
+        paper = models.Paper.objects.filter(tid=teacher.id)
+        subject = models.Subject.objects.all()
+        
+
+        if models.Paper.objects.filter(title=paper_title).exists():
+            message = "，试题名称重复，试题创建失败"
+            return render(request,'teacher.html',{'teacher':teacher,'paper':paper,'subject':subject,'message':message})
+
+        scQuestions = models.SingleChoiceQuestion.objects.all().order_by('?')[:(int)(singleChoiceNum)]
+        mcQuestions = models.MultiChoiceQuestion.objects.all().order_by('?')[:(int)(multiChoiceNum)]
+
+        # create subject_ins for foreign key
+        subject_tmp = models.Subject.objects.get(title=subject_title)
+
+        
+
+        paper_insert = models.Paper.objects.create(title=paper_title,
+                    tid=teacher,subject=subject_tmp,examperiod=exam_period,examtime=datetime.datetime.now())
+
+        paper_insert.sid.set(scQuestions)
+        paper_insert.mid.set(mcQuestions)
+        
+        message = ",试题创建成功"
+        return render(request,'teacher.html',{'teacher':teacher,'paper':paper,'subject':subject,'message':message})
+
+
+        # id = models.AutoField(primary_key=True)
+        # title = models.CharField('试卷名',max_length=50,default='测试')
+        # #title = '试卷名'
+        # sid=models.ManyToManyField(SingleChoiceQuestion)#多对多
+        # mid=models.ManyToManyField(MultiChoiceQuestion)#多对多
+        # tid=models.ForeignKey(Officer,on_delete=models.CASCADE)#添加外键
+        # subject = models.ForeignKey(Subject,on_delete=models.CASCADE)
+        # examperiod = models.IntegerField('考试时长',default=45)
+        # examtime=models.DateTimeField()

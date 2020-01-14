@@ -6,12 +6,26 @@
 {#     <link rel="icon" href="http://v3.bootcss.com/favicon.ico">#}
 
     <link href="../static/bootstrap-4.3.1-dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link href="../static/bootstrap-table-dist/bootstrap-table.min.css" rel="stylesheet"> -->
+    <link href="https://cdn.bootcss.com/bootstrap-table/1.15.4/bootstrap-table.css" rel="stylesheet">
+    <link href="../static/font-awesome-4.7-dist/css/font-awesome.min.css" rel="stylesheet">
+    
+
     <!-- 必须在引入bootstarp.js之前引入 -->
     <script src="../static/jquery-3.3.1.min.js"></script>
 
     <script src="../static/bootstrap-4.3.1-dist/js/bootstrap.min.js"></script>
 
     <script src="../static/js/echarts.min.js"></script>
+
+    <script src="../static/bootstrap-table-dist/bootstrap-table.js"></script>
+    <!-- <script src="../static/bootstrap-table-dist/bootstrap-table-zh-CN.js"></script> -->
+    <!-- <script src="../static/bootstrap-4.3.1-dist/js/bootstrap-table.js"></script> -->
+    <script src="../static/bootstrap-4.3.1-dist/js/bootstrap-table-zh-CN.js"></script>
+    
+    <script src="../static/bootstrap-table-dist/extensions/export/bootstrap-table-export.min.js"></script>
+    <script src="../static/bootstrap-table-dist/tableExport.min.js"></script>
+    
     <title>教师页面</title>
 </head>
 <body>
@@ -21,16 +35,19 @@
             <a class="nav-link" style="font-weight: bold;">在线训练系统</a>
         </li>
 
-          <li class="nav-item">
-              <a class="nav-link" href="" data-target="#stuModal" data-toggle="modal">受训人登陆</a>
-          </li>
+            <li class="nav-item">
+                <a class="nav-link" href="" data-target="#stuModal" data-toggle="modal">受训人登陆</a>
+            </li>
 
-          <li class="nav-item">
-              <a class="nav-link" href="" data-target="#teaModal" data-toggle="modal">组训人登陆</a>
-          </li>
-        
+            <li class="nav-item">
+                <a class="nav-link" href="" data-target="#teaModal" data-toggle="modal">组训人登陆</a>
+            </li>
 
-          <li style="position: fixed;right: 70px; font-size: 18px;color: #2f21f5;top:13px;">{{ teacher.name }}{{ message }}</li>
+            <li class="nav-item">
+                <a class="nav-link" href="/admin">管理员</a>
+            </li>   
+
+          <li style="position: fixed;right: 70px; font-size: 18px;color: rgb(8, 170, 224);top:13px;">{{ teacher.name }}{{ message }}</li>
               <a href="/logout/">
           <li style="position: fixed;right: 20px; font-size: 20px;color:#cc1313; font-size:18px; top:13px;">退出</li></a>
 
@@ -69,6 +86,10 @@
     <li class="nav-item">
         <a class="nav-link" data-toggle="pill" href="#menu3">信息导入</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link" data-toggle="pill" href="#menu4">试卷生成</a>
+    </li>
+
     <!-- <li class="nav-item">
       <a class="nav-link" href="/admin/student/paper/add/">组卷</a>
     </li> -->
@@ -79,116 +100,103 @@
     <div id="home" class="container tab-pane active"><br>
       <h3>个人信息</h3>
         <table class="table">
-    <thead>
-      <tr>
-        <th>属性</th>
-        <th>信息</th>
-
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>教工号</td>
-        <td>{{ teacher.id }}</td>
-
-      </tr>
-      <tr class="table-primary">
-        <td>姓名</td>
-        <td>{{ teacher.name }}</td>
-
-      </tr>
-      <tr class="table-success">
-        <td>性别</td>
-        <td>{{ teacher.sex }}</td>
-
-      </tr>
-      <tr class="table-danger">
-        <td>学院</td>
-        <td>{{ teacher.dept }}</td>
-
-      </tr>
-
-
-    </tbody>
-  </table>
+            <thead>
+                <tr>
+                    <th>属性</th>
+                    <th>信息</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>教工号</td>
+                    <td>{{ teacher.id }}</td>
+                </tr>
+                <tr class="table-primary">
+                    <td>姓名</td>
+                    <td>{{ teacher.name }}</td>
+                </tr>
+                <tr class="table-success">
+                    <td>性别</td>
+                    <td>{{ teacher.sex }}</td>
+                </tr>
+                <tr class="table-danger">
+                    <td>学院</td>
+                    <td>{{ teacher.dept }}</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
     <div id="menu1" class="container tab-pane fade"><br>
-      <h3>成绩统计</h3>
-      <p></p>
-        <table class="table">
-            <thead>
-              <tr>
+            <h3>成绩统计</h3>
+            <br>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>训练科目</th>
+                    <th>训练名称</th>
+                    <th>考试时长</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
 
-                  <th>姓名</th>
-                  <th>训练科目</th>
-                  <th>训练名称</th>
-                  <th>考试时长</th>
-                  <th>操作</th>
-              </tr>
-            </thead>
+                <tbody>
+                {#   遍历字典  paper #}
+                {% for paper1 in paper %}
+                <tr class="table-info">
 
-            <tbody>
-            {#   遍历字典  paper #}
-            {% for paper1 in paper %}
-             <tr class="table-info">
+                    <td>{{ teacher.name }}</td>
+                    <td>{{ paper1.subject }}</td>
+                    <td>{{ paper1.title }}</td>
+                    <td>{{ paper1.examperiod }}</td>
+                    <td><a href="/showGrade/?paper_title={{ paper1.title }}">
+                        <button type="button" class="btn btn-primary"
+                    data-toggle="collapse" data-target="#demo">查看学生成绩</button></a>
+                    </td>
 
-                  <td>{{ teacher.name }}</td>
-                  <td>{{ paper1.subject }}</td>
-                  <td>{{ paper1.title }}</td>
-                  <td>{{ paper1.examperiod }}</td>
-                 <td><a href="/showGrade/?paper_title={{ paper1.title }}">
-                     <button type="button" class="btn btn-primary"
-                 data-toggle="collapse" data-target="#demo">查看学生成绩</button></a>
-                 </td>
+                {#          <td><button class="btn btn-primary">开始考试</button></td>#}
+                </tr>
 
-            {#          <td><button class="btn btn-primary">开始考试</button></td>#}
-              </tr>
+                {% endfor %}
+                </tbody>
+            </table>
 
-            {% endfor %}
-
-
-            </tbody>
-
-        </table>
-
-    <div id="main" style="width: 800px;height:500px;"></div>
-
-    <script type="text/javascript">
-        // 基于准备好的dom，初始化echarts实例
-        var myChart = echarts.init(document.getElementById('main'));
+            <!-- <div id="main" style="width: 800px;height:500px;"></div> -->
+            <script type="text/javascript">
+                // 基于准备好的dom，初始化echarts实例
+                var myChart = echarts.init(document.getElementById('main'));
 
 
-        // 指定图表的配置项和数据
-        var option = {
-                        legend: {},
-                        tooltip: {},
-                        dataset: {
-                            // 提供一份数据。
-                            source: [
-                                ['product', '{{ data_1.title }}' ],
-                                ['<60', {{ data_1.data1 }} ],
-                                ['60<=成绩<70', {{ data_1.data2 }} ],
-                                ['70<=成绩<80', {{ data_1.data3 }} ],
-                                ['80<=成绩<90', {{ data_1.data4 }} ],
-                                ['90<=成绩', {{ data_1.data5 }} ]
+                // 指定图表的配置项和数据
+                var option = {
+                                legend: {},
+                                tooltip: {},
+                                dataset: {
+                                    // 提供一份数据。
+                                    source: [
+                                        ['product', '{{ data_1.title }}' ],
+                                        ['<60', {{ data_1.data1 }} ],
+                                        ['60<=成绩<70', {{ data_1.data2 }} ],
+                                        ['70<=成绩<80', {{ data_1.data3 }} ],
+                                        ['80<=成绩<90', {{ data_1.data4 }} ],
+                                        ['90<=成绩', {{ data_1.data5 }} ]
 
-                            ]
-                        },
-                        // 声明一个 X 轴，类目轴（category）。默认情况下，类目轴对应到 dataset 第一列。
-                        xAxis: {type: 'category'},
-                        // 声明一个 Y 轴，数值轴。
-                        yAxis: {},
-                        // 声明多个 bar 系列，默认情况下，每个系列会自动对应到 dataset 的每一列。
-                        series: [
-                            {type: 'bar'},
-                        ]
-                    };
+                                    ]
+                                },
+                                // 声明一个 X 轴，类目轴（category）。默认情况下，类目轴对应到 dataset 第一列。
+                                xAxis: {type: 'category'},
+                                // 声明一个 Y 轴，数值轴。
+                                yAxis: {},
+                                // 声明多个 bar 系列，默认情况下，每个系列会自动对应到 dataset 的每一列。
+                                series: [
+                                    {type: 'bar'},
+                                ]
+                            };
 
-        // 使用刚指定的配置项和数据显示图表。
-        myChart.setOption(option);
-
-    </script>
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+            </script>
     </div>
 
     <div id="menu2" class="container tab-pane fade"><br>
@@ -199,38 +207,45 @@
           <form action="/queryStudent/" method="get">
               <input type="hidden" name="tid" value="{{ teacher.id }}">
               <div class="row">
-                  <div class="col-sm-2">
+                  <div class="col-sm-3">
                       <div class="form-group">
-                          <label>学号</label>
-                          <input type="text" name="id" class="form-control" placeholder="请输入学号">
+                            <label class="form-inline">学号：
+                                <input type="text" name="id" class="form-control" placeholder="请输入学号"
+                                style="width: 150px;">
+                            </label>
                       </div>
                   </div>
 
-                  <div class="col-sm-2 offset-1">
-                      <label for="">试卷名</label>
+                  <div class="col-sm-3">
+                      <label class="form-inline" for="">试卷名：
                       <select name="paper_title" class="form-control">
                         <option value ="all">全选</option>
                         {% for paper_uut in paper %}
                             <option value ="{{ paper_uut.title }}">{{ paper_uut.title }}</option>
                         {% endfor %}
                       </select>
+                    </label>
                   </div>
 
-                  <div class="col-sm-2 offset-2">
-                      <button class="btn btn-success" type="submit">search</button>
+                  <div class="col-sm-2 offset-3">
+                      <button class="btn btn-success" type="submit">查询</button>
                   </div>
               </div>
           </form>
       </div>
 
 {#    搜到的学生信息#}
+        <br>
         <div class="container">
-            <table class="table">
+            
+            <table  id="exam_table" data-search="true">    
+                <div id="toolbar_exam" ></div>
+                {#  class="table"  data-show-refresh="true" data-show-toggle="true" data-show-columns="true" #}
                 <thead>
                   <tr>
-                      <th>学号</th>
-                      <th>试卷</th>
-                      <th>成绩</th>
+                      <th data-field="study_id">学号</th>
+                      <th data-field="paper">试卷</th>
+                      <th data-field="grade">成绩</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -367,9 +382,99 @@
                         </table>
                     </div>
                 </div>
-
             </div>
-      </div>
+        </div>
+    </div>
+
+
+    <div id="menu4" class="container tab-pane"><br>
+
+        <div class="container">
+            <div class="row">
+                {# 自动组卷 #}
+                <div class="col-sm-6">
+                    <div class="card" style="height: 400px;">
+                    <div class="card-body" >
+
+                    <div class="alert alert-light">
+                        <strong>自动组卷：</strong>
+                           
+                    </div>
+                    <form action="/genPaper/" method="post">
+                        <input type="hidden" name="tid" value="{{ teacher.id }}">
+                        
+                        <div class="form-group" style="margin-left:30px;">
+                                <label class="form-inline">单选题数:&nbsp;
+                                <input type="text" name="singleChoiceNum" class="form-control" 
+                                placeholder="1~{{ sc_num }}" value="10"></label>
+                        </div>
+                        
+                        <div class="form-group" style="margin-left:30px;">
+                                <label class="form-inline">多选题数:&nbsp;
+                                <input type="text" name="multiChoiceNum" class="form-control" 
+                                placeholder="1~{{ mc_num }}" value="10"></label>
+                        </div>
+
+                        <div class="form-group" style="margin-left:30px;">
+                                <label class="form-inline">试卷名称:&nbsp;
+                                <input type="text" name="paper_title" class="form-control" 
+                                placeholder="" ></label> 
+                                <!-- style="width: 120px;" -->
+                        </div>
+
+                        <div class="form-group" style="margin-left:30px;">
+                            <label class="form-inline">考试时长:&nbsp;
+                            <input type="text" name="exam_period" class="form-control" 
+                            placeholder="分钟" value="45"></label>
+                        </div>
+
+                        <div class="form-group" style="margin-left:30px;">
+                            <label class="form-inline" for="">训练科目:&nbsp;
+                                <select name="subject_title" class="form-control">
+                                {% for subject_uut in subject %}
+                                    <option value ="{{ subject_uut.title }}">{{ subject_uut.title }}</option>
+                                {% endfor %}
+                                <option value ="all">全选</option>
+                                </select>
+                            </label>
+                        </div>
+
+                        <button class="btn btn-success" type="submit" style="position:absolute;bottom:25px; right:25px;">生成试卷</button>
+                    </form>
+                    </div><!-- card-body -->
+                    </div><!-- card -->
+                </div>
+
+                
+                <div class="col-sm-6">
+                    <div class='card' style="height: 400px;">
+                        <div class='card-body'>
+                            <form action="/genPaper/" method="post">
+                                <input type="hidden" name="tid" value="{{ teacher.id }}">
+
+                                <div class="alert alert-light">
+                                    <strong>手动组卷：</strong>
+                                    <br><br>
+                                    &nbsp;&nbsp;需管理员权限，
+                                    <br><br>
+                                    &nbsp;&nbsp;请输入试卷名，选择至少1道单选题、1道多选题
+                                    <br><br>&nbsp;&nbsp;选择组训人编号并设置考试时间等信息
+                                </div>
+                                <input type="button" class="btn btn-success" style=" position:absolute;bottom:25px; right:25px;" 
+                                onclick="javascript:window.location.href='/admin/exam/paper/add/' " 
+                                value="手动组卷">
+                            </form>
+                        </div><!-- card-body -->
+                    </div><!-- card -->
+                </div>
+
+            
+
+        </div>
+
+    </div>
+
+
 </div>
 
 
@@ -450,6 +555,46 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div>
+
+
+<script>
+
+$('#exam_table').bootstrapTable({
+    toolbar: '#toolbar_exam',    //工具按钮用哪个容器
+    striped: true,      //是否显示行间隔色
+    cache: false,      //是否使用缓存，默认为true，所以一般情况下需要设置一下这个属性（*）
+    pagination: true,     //是否显示分页（*）
+    sortable: true,      //是否启用排序
+    sortOrder: "paper asc",     //排序方式
+    pageNumber: 1,      //初始化加载第一页，默认第一页
+    pageSize: 5,      //每页的记录行数（*）
+    pageList: [20, 50, 100, 150],  //可供选择的每页的行数（*）
+    singleSelect: false,
+    sidePagination: "client", //服务端处理分页
+    exportDataType:'all',//'basic':当前页的数据, 'all':全部的数据, 'selected':选中的数据
+    // Icons:'glyphicon glyphicon-export', //导出图标
+    showExport: true,  //是否显示导出按钮
+    buttonsAlign:"right",  //按钮位置
+    exportTypes:['excel'],  //导出文件类型，[ 'csv', 'txt', 'sql', 'doc', 'excel', 'xlsx', 'pdf']
+    // showRefresh:true,
+
+    columns: [{
+        field: 'study_id',
+        title: '学号',
+        sortable: true//可排序
+    }, {
+        field: 'paper',
+        title: '试卷名称',
+        sortable: true//可排序
+    }, {
+        field: 'grade',
+        title: '分数',
+        sortable: true//可排序
+    }, ]
+});
+$('#exam_table').bootstrapTable('hideLoading');
+    
+</script>
 
 </body>
 </html>

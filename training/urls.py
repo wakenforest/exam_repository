@@ -41,4 +41,5 @@ urlpatterns = [
     url(r'^upPersonInfo/$', views.upPersonInfo),
     url('queryStudent',views.queryStudent),
     url('showGrade',views.showGrade),
+    url('genPaper',views.genPaper),
 ]
